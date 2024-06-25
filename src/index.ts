@@ -7,6 +7,13 @@ import {
 	updateProject,
 	deleteProject,
 } from './controllers/projects.controller';
+import {
+	createReport,
+	getReportsByProject,
+	getReport,
+	updateReport,
+	deleteReport,
+} from './controllers/reports.controller';
 
 dotenv.config();
 
@@ -22,8 +29,16 @@ app.get('/projects/:id', getProject);
 app.put('/projects/:id', updateProject);
 app.delete('/projects/:id', deleteProject);
 
-app.listen(port, () => {
-	console.log(`[server]: Server is running at http://localhost:${port}`);
-});
+// Reports
+app.post('/projects/:projectId/reports', createReport);
+app.get('/projects/:projectId/reports', getReportsByProject);
+app.get('/reports/:id', getReport);
+app.put('/reports/:id', updateReport);
+app.delete('/reports/:id', deleteReport);
 
+if (process.env.NODE_ENV !== 'test') {
+	app.listen(port, () => {
+		console.log(`[server]: Server is running at http://localhost:${port}`);
+	});
+}
 export default app;
