@@ -60,3 +60,20 @@ describe('Reports API', () => {
 		expect(res.status).toBe(204);
 	});
 });
+
+describe('Frequent Word Reports API', () => {
+	it('should retrieve reports with a frequent word', async () => {
+		const mockReports = [
+			{ id: '1', text: 'hello hello hello world', projectId: 'p1' },
+			{ id: '2', text: 'test test', projectId: 'p2' },
+		];
+
+		jest.spyOn(db, 'query').mockReturnValue(mockReports);
+
+		const res = await request(app).get('/reports/frequent-word');
+		expect(res.status).toBe(200);
+		expect(Array.isArray(res.body)).toBe(true);
+		expect(res.body.length).toBe(1);
+		expect(res.body[0].id).toBe('1');
+	});
+});

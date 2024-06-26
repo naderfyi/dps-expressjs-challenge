@@ -2,6 +2,12 @@ import { Request, Response } from 'express';
 import db from '../services/db.service';
 import { v4 as uuid } from 'uuid';
 
+interface Report {
+	id: string;
+	text: string;
+	projectId: string;
+}
+
 // Create a report
 export function createReport(req: Request, res: Response) {
 	const { text } = req.body;
@@ -48,4 +54,33 @@ export function deleteReport(req: Request, res: Response) {
 	const id = req.params.id;
 	db.run('DELETE FROM reports WHERE id = @id', { id });
 	res.status(204).send();
+}
+
+// Function to check if any word appears at least three times
+function hasFrequentWord(text: string): boolean {
+	const words = text.toLowerCase().match(/\w+/g) || [];
+	const wordCounts = words.reduce(
+		(acc, word) => {
+			acc[word] = acc[word] ? acc[word] + 1 : 1;
+			return acc;
+		},
+		{} as { [key: string]: number },
+	);
+
+	return Object.values(wordCounts).some((count) => count >= 3);
+}
+
+// API Endpoint to get reports with frequent words
+export function getFrequentWordReports(req: Request, res: Response) {
+	try {
+		// Assuming db.query returns an array of Report objects
+		const reports = db.query('SELECT * FROM reports') as Report[];
+		const frequentWordReports = reports.filter((report) =>
+			hasFrequentWord(report.text),
+		);
+		res.send(frequentWordReports);
+	} catch (error) {
+		console.error('Error fetching reports:', error);
+		res.status(500).send({ message: 'Error fetching reports' });
+	}
 }

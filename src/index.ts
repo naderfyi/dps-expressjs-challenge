@@ -13,6 +13,7 @@ import {
 	getReport,
 	updateReport,
 	deleteReport,
+	getFrequentWordReports,
 } from './controllers/reports.controller';
 
 dotenv.config();
@@ -28,6 +29,9 @@ app.get('/projects', getAllProjects);
 app.get('/projects/:id', getProject);
 app.put('/projects/:id', updateProject);
 app.delete('/projects/:id', deleteProject);
+
+// Frequent word reports
+app.get('/reports/frequent-word', getFrequentWordReports);
 
 // Reports
 app.post('/projects/:projectId/reports', createReport);
