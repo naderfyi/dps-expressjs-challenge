@@ -45,5 +45,8 @@ export function updateProject(req: Request, res: Response) {
 export function deleteProject(req: Request, res: Response) {
 	const id = req.params.id;
 	db.run('DELETE FROM projects WHERE id = @id', { id });
+
+	db.run('DELETE FROM reports WHERE projectId = @id', { id });
+
 	res.status(204).send();
 }

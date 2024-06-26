@@ -23,6 +23,12 @@ export function createReport(req: Request, res: Response) {
 // Get reports by project
 export function getReportsByProject(req: Request, res: Response) {
 	const projectId = req.params.projectId;
+	const project = db.query('SELECT * FROM projects WHERE id = @projectId', {
+		projectId,
+	});
+	if (project.length === 0) {
+		res.status(404).send({ message: 'Project not found' });
+	}
 	const reports = db.query(
 		'SELECT * FROM reports WHERE projectId = @projectId',
 		{ projectId },
