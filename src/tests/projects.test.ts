@@ -4,10 +4,12 @@ import db from '../../src/services/db.service';
 
 beforeAll(() => {
 	db.run('DELETE FROM projects');
+	db.run('DELETE FROM reports');
 });
 
 afterAll(() => {
 	db.run('DELETE FROM projects');
+	db.run('DELETE FROM reports');
 });
 
 describe('Projects API', () => {
