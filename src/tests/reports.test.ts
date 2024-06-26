@@ -17,16 +17,20 @@ describe('Reports API', () => {
 	let reportId: string;
 
 	beforeAll(async () => {
-		const res = await request(app).post('/projects').send({
-			name: 'Project for Reports',
-			description: 'Description for Reports',
-		});
+		const res = await request(app)
+			.post('/projects')
+			.set('Authorization', 'Password123')
+			.send({
+				name: 'Project for Reports',
+				description: 'Description for Reports',
+			});
 		projectId = res.body.id;
 	});
 
 	it('should create a new report', async () => {
 		const res = await request(app)
 			.post(`/projects/${projectId}/reports`)
+			.set('Authorization', 'Password123')
 			.send({
 				text: 'Report text',
 			});
@@ -36,27 +40,36 @@ describe('Reports API', () => {
 	});
 
 	it('should get reports by project', async () => {
-		const res = await request(app).get(`/projects/${projectId}/reports`);
+		const res = await request(app)
+			.get(`/projects/${projectId}/reports`)
+			.set('Authorization', 'Password123');
 		expect(res.status).toBe(200);
 		expect(res.body.length).toBeGreaterThan(0);
 	});
 
 	it('should get a single report', async () => {
-		const res = await request(app).get(`/reports/${reportId}`);
+		const res = await request(app)
+			.get(`/reports/${reportId}`)
+			.set('Authorization', 'Password123');
 		expect(res.status).toBe(200);
 		expect(res.body.id).toBe(reportId);
 	});
 
 	it('should update a report', async () => {
-		const res = await request(app).put(`/reports/${reportId}`).send({
-			text: 'Updated report text',
-		});
+		const res = await request(app)
+			.put(`/reports/${reportId}`)
+			.set('Authorization', 'Password123')
+			.send({
+				text: 'Updated report text',
+			});
 		expect(res.status).toBe(200);
 		expect(res.body.text).toBe('Updated report text');
 	});
 
 	it('should delete a report', async () => {
-		const res = await request(app).delete(`/reports/${reportId}`);
+		const res = await request(app)
+			.delete(`/reports/${reportId}`)
+			.set('Authorization', 'Password123');
 		expect(res.status).toBe(204);
 	});
 });
@@ -70,7 +83,9 @@ describe('Frequent Word Reports API', () => {
 
 		jest.spyOn(db, 'query').mockReturnValue(mockReports);
 
-		const res = await request(app).get('/reports/frequent-word');
+		const res = await request(app)
+			.get('/reports/frequent-word')
+			.set('Authorization', 'Password123');
 		expect(res.status).toBe(200);
 		expect(Array.isArray(res.body)).toBe(true);
 		expect(res.body.length).toBe(1);

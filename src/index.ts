@@ -1,5 +1,6 @@
 import express, { Express } from 'express';
 import dotenv from 'dotenv';
+import { authenticate } from './middleware/auth.middleware';
 import {
 	createProject,
 	getAllProjects,
@@ -22,6 +23,9 @@ const app: Express = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
+
+// Use authentication middleware for all routes
+app.use(authenticate);
 
 // Projects
 app.post('/projects', createProject);
